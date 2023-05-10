@@ -1,8 +1,38 @@
+<% if params[:destroy_success] %>
+  <div class="alert alert-success" role="alert">
+    Votre commentaire a été supprimé avec succès !
+  </div>
+<% end %>
+
 <h1>Bienvenu sur la page Gossip n<%=@current_gossip.id %></h1>
 
-<p>Auteur du Potin : <%=@current_gossip.user.first_name %> </p>
 <p>Titre du Potin : <%=@current_gossip.title %></p>
-<p>Date de creation du Potin : <%=@current_gossip.created_at %></p>
+
 <p>Potin : <%=@current_gossip.content %></p>
 
-<p>Lien vers la page de l'auteur : <%= link_to "Cliquer ici.", user_path(@current_gossip.user.id), :class => "nav-link"%></p>
+<p>Auteur du Potin : <%=@current_gossip.user.first_name %> </p>
+<p>à : <a href="<%= city_path(@current_gossip.user.city.id) %>"><%=@current_gossip.user.city.name%></p>
+
+
+<%= button_to "Supprimer", gossip_path(@current_gossip.id), form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger" %>
+
+<p><a href="<%= user_path(@current_gossip.user.id) %>" class="btn btn-primary"> Voir le profil de l'auteur </a></p>
+
+Commentaires (<%=@current_gossip.comments.count%>) : 
+    <%@current_gossip.comments.each do |elem|%>
+      <p>
+        <p><strong> <%= elem.user.first_name%></strong> : <%= elem.content%> <p>
+        <small><%= button_to "Supprimer", gossip_comment_path(@current_gossip.id, elem.id), form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger" %></small> <br/>
+        <%= link_to "Editer", edit_gossip_comment_path(@current_gossip.id, elem.id), :class => "btn btn-danger"%>
+
+
+      <%end%>
+
+<div>
+  <%= form_with url: url_for(controller: 'comment', action: 'create', gossip_id: @current_gossip.id) do |form| %>
+    <%= form.label :commentaire %>
+    <%= form.text_area :content %>
+
+    <%= form.submit %>
+  <% end %>
+</div>

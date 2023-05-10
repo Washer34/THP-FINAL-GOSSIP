@@ -1,15 +1,27 @@
-<% if params[:success] %>
+<% if params[:post_success] %>
   <div class="alert alert-success" role="alert">
     Votre potin a été créé avec succès !
   </div>
 <% end %>
+<% if params[:destroy_success] %>
+  <div class="alert alert-success" role="alert">
+    Votre potin a été supprimé avec succès !
+  </div>
+<% end %>
 <h1>Bienvenue sur notre magnifique site de potins !</h1>
-<h2><%= link_to "Cliquez ici pour creer votre propre potin.", new_gossip_path, :class => "nav-link"%></h2>
+<p>
+  <a href="<%= new_gossip_path %>" class="btn btn-success"> Créer un potin</a>
+</p>
 
 <h1>Voici la liste de tous les potins : </h1><br/>
     <%@all_gossips.each do |elem|%>
-    <%=elem.user.first_name %> : <%= elem.title%>  <%= link_to "Cliquez ici pour lire le potin.", gossip_path(elem.id), :class => "nav-link"%> <br/>
+      <p>
+        <h3> <%= elem.title%> </h3> par : <%= elem.user.first_name %>
+      </p>
+      <p>
+        <a href="<%= gossip_path(elem.id) %>" class="btn btn-primary"> Lire la suite </a>
+        <a href="<%= edit_gossip_path(elem.id) %>" class="btn btn-default"> Editer </a>
+      </p>
     <%end%>
-
 <h1>Static#home</h1>
 <p>Find me in app/views/static/index.html.erb</p>

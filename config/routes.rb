@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
+  get 'city/show'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  resources :gossip
+  resources :gossip do
+    resources :comment 
+  end
   resources :user
+  resources :city
   get 'team', to: 'static#team'
   get 'contact', to: 'static#contact'
   get 'welcome/:user_name', to: 'welcome#show'

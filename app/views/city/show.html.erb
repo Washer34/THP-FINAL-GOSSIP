@@ -1,0 +1,8 @@
+<h1>Bienvenue sur la page de la ville de <%= @current_city.name %></h1>
+
+Voici la liste de potins écrits par les utilisateurs venant de <%= @current_city.name %>
+<%@gossips.each do |gossip|%>
+      <p>
+        <h3> <%= gossip.title%> </h3> par : <%= gossip.user.first_name %>
+      </p>
+<% end%>
