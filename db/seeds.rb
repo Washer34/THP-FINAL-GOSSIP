@@ -37,7 +37,7 @@ end
 
 #Création des tags OK
 10.times do
-  user = Tag.create!(title: Faker::Emotion.unique.noun)
+  user = Tag.creattitle: Faker::Emotion.unique.noun)
 end
 
 current_tag_ids = Tag.ids

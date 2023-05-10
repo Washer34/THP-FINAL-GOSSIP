@@ -13,6 +13,9 @@ class GossipController < ApplicationController
     @gossip = Gossip.new('user_id' => User.all.sample.id,
                    'title' => params[:title],
                    'content' => params[:content])
+    params[:tag_ids].each do |tag_id|
+      @gossip.intertags.build(tag_id: tag_id)
+    end
     if @gossip.save
       redirect_to root_path(post_success: true)
     else

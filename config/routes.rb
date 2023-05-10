@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :gossip do
     resources :comment 
   end
+  resources :tag
   resources :user
   resources :city
   get 'team', to: 'static#team'

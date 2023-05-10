@@ -13,6 +13,7 @@
   </ul>
 </div>
 <% end %>
+
 <div>
   <%= form_tag url_for(action: 'create'), method: "post" do %>
     <%= label_tag 'Title' %>
@@ -21,6 +22,15 @@
     <%= label_tag 'Content' %>
     <%= text_area_tag 'content', @gossip.content %>
     <br /> <br />
+    <br /> <br />
+    <div class="form-group">
+      <label>Tags</label>
+      <% Tag.all.each do |tag| %>
+        <%= check_box_tag "tag_ids[]", tag.id %>
+        <%= tag.title %>
+      <% end %>
+    </div>
+
     <br /> <br />
     <%= submit_tag "Create Post" %>
   <% end %>
