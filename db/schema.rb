@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_04_145829) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_11_110952) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_04_145829) do
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
+  create_table "pouces", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "gossip_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["gossip_id"], name: "index_pouces_on_gossip_id"
+    t.index ["user_id"], name: "index_pouces_on_user_id"
+  end
+
   create_table "private_messages", force: :cascade do |t|
     t.bigint "recipient_id"
     t.bigint "sender_id"
@@ -83,9 +92,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_04_145829) do
     t.bigint "city_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "password_digest"
     t.index ["city_id"], name: "index_users_on_city_id"
   end
 
   add_foreign_key "comments", "users"
   add_foreign_key "likes", "users"
+  add_foreign_key "pouces", "gossips"
+  add_foreign_key "pouces", "users"
 end

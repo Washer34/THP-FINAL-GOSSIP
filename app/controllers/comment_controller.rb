@@ -6,16 +6,20 @@ class CommentController < ApplicationController
 
   def create
     @current_gossip = Gossip.find(params[:gossip_id].to_i)
-    @comment = Comment.new(
-      'user_id' => User.all.sample.id,
-      'gossip_id' => @current_gossip.id,
-      'content' => params[:content]
-    )
-    puts params
-    if @comment.save
-      redirect_to gossip_path(@current_gossip)
+    if logged_in?
+      @comment = Comment.new(
+        'user_id' => current_user.id,
+        'gossip_id' => @current_gossip.id,
+        'content' => params[:content]
+      )
+      puts params
+      if @comment.save
+        redirect_to gossip_path(@current_gossip)
+      else
+        render :new
+      end
     else
-      render :new
+      redirect_to root_path(connection_failed: true) 
     end
   end
 
@@ -23,10 +27,14 @@ class CommentController < ApplicationController
     @current_gossip = Gossip.find(params[:gossip_id].to_i)
     @current_comment = @current_gossip.comments.find(params[:id].to_i)
     comment_params = params.permit(:content)
-    if @current_comment.update(comment_params)
+
+    if !logged_in?
+      redirect_to root_path(connection_failed: true)
+    elsif @current_comment.user.id == current_user.id
+      @current_comment.update(comment_params)
       redirect_to gossip_path(@current_gossip)#(:update_success)
     else
-      redirect_to gossip_path()#(:update_failed)
+      redirect_to gossip_path(@current_gossip, update_failed: true)#(:update_failed)
     end
 
   end
@@ -34,7 +42,11 @@ class CommentController < ApplicationController
   def destroy
     @current_gossip = Gossip.find(params[:gossip_id].to_i)
     @current_comment = @current_gossip.comments.find(params[:id].to_i)
-    if @current_comment.destroy
+
+    if !logged_in?
+      redirect_to root_path(connection_failed: true)
+    elsif @current_comment.user.id == current_user.id
+      @current_comment.destroy
       redirect_to gossip_path(@current_gossip)#gossip_path()#(:destroy_success)
     else
       redirect_to root_path()
